@@ -1,10 +1,11 @@
 {
-	"name": "shorturl",
+	"name": "fcc-url-shortener",
 	"version": "0.0.1",
 	"description": "API project for freeCodeCamp",
 	"main": "server.js",
 	"scripts": {
-		"start": "node server.js"
+		"start": "node server.js",
+		"test": "jest --forceExit --detectOpenHandles"
 	},
 	"dependencies": {
 		"express": "^5.0.0-alpha.2",
@@ -18,12 +19,21 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://hyperdev.com/#!/project/welcome-project"
+		"url": "https://github.com/jlouiss/fcc-url-shortener.git"
 	},
 	"keywords": [
 		"node",
 		"hyperdev",
-		"express"
+		"express",
+		"freecodecamp"
 	],
-	"license": "MIT"
+	"license": "MIT",
+	"devDependencies": {
+		"@types/chai": "^4.1.4",
+		"@types/express": "^4.16.0",
+		"@types/jest": "^23.3.1",
+		"chai": "^4.1.2",
+		"chai-http": "^4.0.0",
+		"jest": "^23.4.2"
+	}
 }
