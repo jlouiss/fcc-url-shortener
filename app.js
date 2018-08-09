@@ -4,11 +4,13 @@ const express = require('express')
 const mongo = require('mongodb')
 const mongoose = require('mongoose')
 const cors = require('cors')
+const bodyParser = require('body-parser')
 
 const app = express()
 const api = require('./api')
 
 app.use(cors())
+app.use(bodyParser.json())
 
 app.use('/public', express.static(process.cwd() + '/public'))
 app.use((req, res, next) => {
