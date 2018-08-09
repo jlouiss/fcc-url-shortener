@@ -6,16 +6,17 @@ const mongoose = require('mongoose')
 const cors = require('cors')
 
 const app = express()
-
-/** this project needs a db !! **/
-// mongoose.connect(process.env.MONGOLAB_URI);
+const api = require('./api')
 
 app.use(cors())
 
-/** this project needs to parse POST bodies **/
-// you should mount the body-parser here
-
 app.use('/public', express.static(process.cwd() + '/public'))
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.originalUrl}`)
+  next()
+})
+app.use('/api/shorturl', api)
+
 
 app.get('/', function (req, res) {
   res.sendFile(process.cwd() + '/views/index.html');
