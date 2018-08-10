@@ -21,10 +21,7 @@ router.post('/new', (req, res) => {
   const original_url = req.body.url
 
   dns.lookup(original_url.replace(/https?:\/\//, ''), (err, data) => {
-    if (err) {
-      res.json(invalidUrlResponse)
-      return
-    }
+    if (err) return res.json(invalidUrlResponse)
 
     res.json({ original_url })
   });
