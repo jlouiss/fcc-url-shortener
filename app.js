@@ -1,8 +1,6 @@
 'use strict'
 
 const express = require('express')
-const mongo = require('mongodb')
-const mongoose = require('mongoose')
 const cors = require('cors')
 const bodyParser = require('body-parser')
 
