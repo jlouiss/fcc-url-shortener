@@ -15,17 +15,52 @@ const ShortURL = mongoose.model(
 )
 
 const invalidUrlResponse = { error: 'invalid URL' }
-const urlDoesntExistResponse = { error: 'No short url for given input' }
+const shortUrlDoesNotExistResponse = { error: 'No short url for given input' }
 
-router.post('/new', (req, res) => {
-  const original_url = req.body.url
+router.post('/new',
+  async function checkURLValidity(req, res, next) {
+    await dns.lookup(req.body.url.replace(/^(https?:\/\/)/, ''),
+      (err, data) => {
+        if (err)
+          res.json(invalidUrlResponse)
+        else
+          next()
+      }
+    )
+  },
+  async function checkURLAlreadyExists(req, res, next) {
+    await ShortURL.find({ original_url: req.body.url }, (err, data) => {
+      if (err) res.json({ err })
 
-  dns.lookup(original_url.replace(/https?:\/\//, ''), (err, data) => {
-    if (err) return res.json(invalidUrlResponse)
+      if (data.length > 0) {
+        const { original_url, short_url } = data[0]
+        res.json({ original_url, short_url })
+        res.end()
+      } else
+        next()
+    })
+  },
+  async (req, res) => {
+    const original_url = req.body.url
 
-    res.json({ original_url })
-  });
-})
+    // count to get new short_url
+    await ShortURL.count((err, count) => {
+      if (err) return res.json({ err })
+
+      // insert new record
+      const shorturl = new ShortURL({ original_url, short_url: count + 1 })
+      shorturl.save((err) => {
+        if (err) res.json({ err })
+
+        res.json({
+          original_url: shorturl.original_url,
+          short_url: shorturl.short_url
+        })
+      })
+    })
+
+  }
+)
 
 router.get('/:short_url', (req, res) => {
 
