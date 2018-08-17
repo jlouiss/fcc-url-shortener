@@ -15,7 +15,6 @@ const ShortURL = mongoose.model(
 )
 
 const invalidUrlResponse = { error: 'invalid URL' }
-const shortUrlDoesNotExistResponse = { error: 'No short url for given input' }
 
 router.post('/new',
   async function checkURLValidity(req, res, next) {
@@ -62,8 +61,19 @@ router.post('/new',
   }
 )
 
-router.get('/:short_url', (req, res) => {
+router.get('/:short_url', async (req, res) => {
+  const shortUrlDoesNotExistResponse = { error: 'Missing url for given input' }
+  const short_url = req.params.short_url
 
+  ShortURL.find({ short_url }, (err, data) => {
+    if (err) res.json({ err })
+
+    if (data.length === 0)
+      res.json(shortUrlDoesNotExistResponse)
+
+    if (data.length > 0)
+      res.redirect(data[0].original_url)
+  })
 })
 
 
