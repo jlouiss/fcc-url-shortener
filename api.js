@@ -1,4 +1,5 @@
 'use strict'
+
 const express = require('express')
 const mongoose = require('mongoose')
 const dns = require('dns')
@@ -18,7 +19,7 @@ const invalidUrlResponse = { error: 'invalid URL' }
 
 router.post('/new',
   async function checkURLValidity(req, res, next) {
-    await dns.lookup(req.body.url.replace(/^(https?:\/\/)/, ''),
+    await dns.lookup(req.body.url.replace(/^(https?:\/\/)/, '').replace(/\/$/, ''),
       (err, data) => {
         if (err)
           res.json(invalidUrlResponse)
